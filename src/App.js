@@ -71,7 +71,6 @@ function App() {
   return (
     <div className='p-10 bg-gray-400 min-h-screen'>
       <div className="max-w-7xl mx-auto h-auto flex bg-white border border-gray-300 rounded-lg shadow-lg overflow-hidden">
-        {/* Sidebar with normal color */}
         <div className="w-1/4 bg-gray-300 text-gray-800 p-8 flex flex-col items-center">
           <form onSubmit={handleSearch} className="mb-8 w-full">
             <input
