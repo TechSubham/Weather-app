@@ -36,7 +36,8 @@ Node.js and npm installed on your local machine.
 
 An OpenWeatherMap API key. Register and obtain one from OpenWeatherMap.
 
-<img width="1438" alt="Screenshot 2024-08-17 at 4 04 19 PM" src="https://github.com/user-attachments/assets/0b6a3c5e-4e31-4282-952d-88347898745b">
+
+<img width="1320" alt="Screenshot 2025-02-04 at 11 08 05 PM" src="https://github.com/user-attachments/assets/8e68213e-733f-4084-bfc1-afc63208a59e" />
 
 
 
