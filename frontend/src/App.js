@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Sun, Cloud, Wind, Droplet, Eye, CloudRain, Sunrise, Sunset } from 'lucide-react';
+import { Wind, Droplet, Eye, CloudRain, Sunrise, Sunset } from 'lucide-react';
 
 const WeatherDashboard = () => {
   const [weatherData, setWeatherData] = useState({
@@ -60,12 +60,11 @@ const WeatherDashboard = () => {
   };
 
   const {
-    main: { temp, feels_like, pressure, humidity },
+    main: { temp, pressure, humidity },
     weather,
     wind: { speed },
     sys: { sunrise, sunset, country },
     visibility,
-    clouds: { all: cloudiness },
     name,
     prediction,
   } = weatherData;
