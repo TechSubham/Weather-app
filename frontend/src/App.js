@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Wind, Droplet, Eye, CloudRain, Sunrise, Sunset } from 'lucide-react';
 
+function predictRain(temp, humidity) {
+  if (humidity > 70) return 'High chance of rain';
+  if (humidity > 50) return 'Moderate chance';
+  return 'Low chance';
+}
+
 const WeatherDashboard = () => {
   const [weatherData, setWeatherData] = useState({
     main: { temp: null, feels_like: null, pressure: null, humidity: null },
@@ -17,6 +23,8 @@ const WeatherDashboard = () => {
   const [query, setQuery] = useState('');
   const [loading, setLoading] = useState(false);
 
+  const hasApiKey = Boolean(process.env.REACT_APP_OPENWEATHER_API_KEY?.trim());
+
   useEffect(() => {
     if (cityName.trim() === '') {
       setWeatherData({
@@ -32,7 +40,15 @@ const WeatherDashboard = () => {
       return;
     }
 
-    const url = `http://localhost:8000/weather?city=${encodeURIComponent(cityName)}`;
+    const apiKey = process.env.REACT_APP_OPENWEATHER_API_KEY?.trim();
+    if (!apiKey) {
+      setLoading(false);
+      return;
+    }
+
+    const url = `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(
+      cityName
+    )}&appid=${apiKey}&units=metric`;
 
     setLoading(true);
     fetch(url)
@@ -40,10 +56,11 @@ const WeatherDashboard = () => {
         if (!response.ok) throw new Error('City not found');
         return response.json();
       })
-      .then(data => {
+      .then(weather => {
+        const prediction = predictRain(weather.main.temp, weather.main.humidity);
         setWeatherData({
-          ...data.weather,
-          prediction: data.prediction,
+          ...weather,
+          prediction,
         });
         setLoading(false);
       })
@@ -120,7 +137,18 @@ const WeatherDashboard = () => {
   const predictionMeta = getPredictionMeta(prediction);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-100 to-blue-300 flex items-center justify-center p-2 sm:p-4">
+    <div className="min-h-screen bg-gradient-to-br from-blue-100 to-blue-300 flex flex-col items-center justify-center p-2 sm:p-4 gap-3">
+      {!hasApiKey && (
+        <div
+          className="w-full max-w-6xl rounded-xl border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-900 shadow"
+          role="status"
+        >
+          <strong className="font-semibold">API key missing.</strong> Put your OpenWeatherMap key in{' '}
+          <code className="rounded bg-amber-100 px-1 py-0.5 text-xs">frontend/.env</code> as{' '}
+          <code className="rounded bg-amber-100 px-1 py-0.5 text-xs">REACT_APP_OPENWEATHER_API_KEY=…</code>
+          , then restart <code className="rounded bg-amber-100 px-1 py-0.5 text-xs">npm start</code>.
+        </div>
+      )}
       <div className="w-full max-w-6xl bg-white rounded-2xl shadow-2xl overflow-hidden">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 p-4 lg:p-6">
           {/* Search and Current Conditions Section */}
